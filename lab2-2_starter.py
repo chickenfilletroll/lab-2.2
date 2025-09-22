@@ -108,7 +108,7 @@ def task3():
     counts = defaultdict(int)
     
     # Open the larger log file for reading
-    with open("mixed_logs_5000.log") as f:
+    with open("sample_auth_small.log") as f:
         # Read the file line by line
         for line in f:
             # Only look at lines about failed logins
