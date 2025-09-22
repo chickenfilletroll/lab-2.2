@@ -1,4 +1,4 @@
-# lab2-2_starter.py - Complete Solution
+# lab2-2_starter.py - Complete Lab 2.2 Solution
 
 from collections import defaultdict
 import time
@@ -25,165 +25,125 @@ def simple_parser(line):
 
 def ip_parse(line):
     """
-    Extract IP address from log line using token-based parsing
-    Looks for the word 'from' and takes the next token as the IP address
+    Task 1.1: Write your own ip_parse(line) function using token-based extraction
+    Looks for the token 'from' and returns the following IP address
     """
-    if "from" in line:  # Check if line contains the anchor word 'from'
-        parts = line.split()  # Split line into words (tokens) using spaces
+    if "from" in line:
+        parts = line.split()  # Split the line into tokens
         try:
-            anchor = parts.index("from")  # Find position of 'from' in the token list
-            ip = parts[anchor + 1]        # Get the next word after 'from' (the IP address)
-            return ip.strip()             # Remove any extra spaces/punctuation and return IP
+            anchor = parts.index("from")    # Find the position of the token "from"
+            ip = parts[anchor + 1]          # The IP address will be the next token
+            return ip.strip()               # Clean up any trailing punctuation
         except (ValueError, IndexError):
-            return None  # Return None if we can't extract IP
-    return None  # Return None if line doesn't contain 'from'
+            return None
+    return None
 
 def top_n(counts, n=5):
     """
-    Return the top N items from a dictionary by their values (counts)
+    Helper function for Task 3: Sort dictionary items and select top N entries
     """
-    # Sort dictionary items by value (count) in descending order and return top N
     return sorted(counts.items(), key=lambda kv: kv[1], reverse=True)[:n]
 
 def task1():
     """
-    Task 1: Extract unique IP addresses from the log file
+    Task 1.2: Extract unique IPs from sample_auth_small.log
     """
-    unique_ips = set()  # Set automatically removes duplicates
-    line_count = 0      # Counter for total lines read
+    unique_ips = set()  # Use set() to keep unique items
+    line_count = 0
     
-    with open(LOGFILE, "r") as file:
-        for line in file:
-            line_count += 1          # Increment line counter
-            ip = ip_parse(line)      # Extract IP from current line
-            if ip:                   # If IP was successfully extracted
-                unique_ips.add(ip)   # Add to set (duplicates automatically ignored)
+    # Read each line in sample_auth_small.log
+    with open("sample_auth_small.log", "r") as f:
+        for line in f:
+            line_count += 1
+            ip = ip_parse(line)  # Extract IP addresses
+            if ip:
+                unique_ips.add(ip)  # Build set of unique IPs
     
-    # Convert set to sorted list for consistent ordering
+    # Sort the unique IPs
     sorted_ips = sorted(unique_ips)
     
-    # Print results as required by the lab
+    # Print required output
     print(f"Lines read: {line_count}")
     print(f"Unique IPs: {len(unique_ips)}")
     print(f"First 10 IPs: {sorted_ips[:10]}")
-    
-    return unique_ips
 
 def task2():
     """
-    Task 2: Count failed login attempts per IP address
+    Task 2: Count failed login attempts per IP
+    Using defaultdict(int) to count occurrences
+    Only count lines containing Failed password or Invalid user
     """
-    # defaultdict(int) creates dictionary where new keys automatically get value 0
-    counts = defaultdict(int)
+    counts = defaultdict(int)  # Create a dictionary to keep track of IPs
     
-    with open(LOGFILE, "r") as file:
-        for line in file:
-            # Check if line indicates a failed login attempt
+    with open("sample_auth_small.log", "r") as f:
+        for line in f:
             if "Failed password" in line or "Invalid user" in line:
-                ip = ip_parse(line)  # Extract IP from failed login line
-                if ip:               # If IP extraction successful
-                    counts[ip] += 1  # Increment count for this IP
-    
-    print("Failed login counts per IP:")
-    # Print each IP with its failure count
-    for ip, count in counts.items():
-        print(f"{ip}: {count}")
-    
-    return counts  # Return counts dictionary for use in Task 3
-
-def task3():
-    """
-    Task 3: Find top 5 attackers and export results to CSV
-    """
-    start_time = time.time()  # Record start time for performance measurement
-    
-    # Count failed attempts (same logic as Task 2)
-    counts = defaultdict(int)
-    with open(LOGFILE, "r") as file:
-        for line in file:
-            if "Failed password" in line or "Invalid user" in line:
+                # extract ip
                 ip = ip_parse(line)
                 if ip:
                     counts[ip] += 1
     
-    # Get top 5 IPs with most failed attempts using the top_n function
-    top_attackers = top_n(counts, 5)
-    
-    # Print formatted results
-    print("Top 5 attacker IPs:")
-    # enumerate(..., 1) gives rank starting from 1 instead of 0
-    for rank, (ip, count) in enumerate(top_attackers, 1):
-        print(f"{rank}. {ip} — {count}")
-    
-    # Export all IP counts to CSV file
-    with open("failed_counts.txt", "w", newline='') as csvfile:
-        writer = csv.writer(csvfile)           # Create CSV writer object
-        writer.writerow(["ip", "failed_count"])  # Write header row
-        # Write each IP and its count as a row
-        for ip, count in counts.items():
-            writer.writerow([ip, count])
-    
-    end_time = time.time()  # Record end time
-    # Calculate and print execution time
-    elapsed_time = end_time - start_time
-    print(f"\nWrote failed_counts.txt")
-    print(f"Elapsed: {elapsed_time:.2f} seconds")
+    # Print the counts for all IPs
+    print("Failed login counts per IP:")
+    print(counts)
 
-def test_with_larger_file():
+def task3():
     """
-    Bonus: Test with the larger file as mentioned in Task 3
+    Task 3: Top 5 attacker IPs and export
+    Run on mixed_logs_5000.log and time execution
     """
-    global LOGFILE
-    original_logfile = LOGFILE  # Save original filename
+    # Start timing
+    start = time.time()
     
-    # Test with larger file
-    LOGFILE = "mixed_logs_5000.log"  # Change to your larger file name
+    counts = defaultdict(int)
     
+    # Try to use mixed_logs_5000.log, fall back to sample_auth_small.log if not found
     try:
-        print("\n" + "="*50)
-        print("Testing with larger file:", LOGFILE)
-        print("="*50)
-        
-        start_time = time.time()
-        
-        # Count failed attempts in larger file
-        counts = defaultdict(int)
-        with open(LOGFILE, "r") as file:
-            for line in file:
+        filename = "mixed_logs_5000.log"
+        with open(filename, "r") as f:
+            for line in f:
                 if "Failed password" in line or "Invalid user" in line:
                     ip = ip_parse(line)
                     if ip:
                         counts[ip] += 1
-        
-        # Get top 5 from larger file
-        top_attackers = top_n(counts, 5)
-        
-        print("Top 5 attacker IPs from larger file:")
-        for rank, (ip, count) in enumerate(top_attackers, 1):
-            print(f"{rank}. {ip} — {count}")
-        
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        print(f"Elapsed with larger file: {elapsed_time:.2f} seconds")
-        
     except FileNotFoundError:
-        print(f"Large file {LOGFILE} not found. Skipping large file test.")
+        # Fall back to small file if large file not available
+        filename = "sample_auth_small.log"
+        with open(filename, "r") as f:
+            for line in f:
+                if "Failed password" in line or "Invalid user" in line:
+                    ip = ip_parse(line)
+                    if ip:
+                        counts[ip] += 1
     
-    finally:
-        LOGFILE = original_logfile  # Restore original filename
+    # Get top 5 IPs by failed attempts
+    top_attackers = top_n(counts, 5)
+    
+    # Print nicely formatted top 5
+    print("Top 5 attacker IPs:")
+    for rank, (ip, count) in enumerate(top_attackers, 1):
+        print(f"{rank}. {ip} — {count}")
+    
+    # Write to CSV file with headers
+    with open("failed_counts.txt", "w", newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["ip", "failed_count"])  # Headers
+        for ip, count in counts.items():
+            writer.writerow([ip, count])
+    
+    # End timing and print results
+    end = time.time()
+    print(f"\nWrote failed_counts.txt")
+    print(f"Elapsed: {end - start:.2f} seconds")
 
 ## This is the main block that will run first. 
 ## It will call any functions from above that we might need.
 if __name__ == "__main__":
-    # Run the three main tasks
-    print("=== Task 1: Extract Unique IPs ===")
+    print("=== Task 1: Extract unique IPs ===")
     task1()
     
-    print("\n=== Task 2: Count Failed Logins per IP ===")
+    print("\n=== Task 2: Count failed login attempts per IP ===")
     task2()
     
-    print("\n=== Task 3: Top 5 Attackers and Export ===")
+    print("\n=== Task 3: Top 5 attacker IPs and export ===")
     task3()
-    
-    # Optional: Test with larger file
-    test_with_larger_file()
