@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
 ## CREATING IP_PARSE FUNCTION
 
-def ip_parse(line)
+def ip_parse(line):
 
     """
     uses token (words) based extraction to find ip addresses in log files.
