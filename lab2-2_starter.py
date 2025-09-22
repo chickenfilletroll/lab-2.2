@@ -65,7 +65,7 @@ def task3():
     
     counts = defaultdict(int)
     
-    with open("mixed_logs_5000.log") as f:
+    with open("sample_auth_small.log") as f:
         for line in f:
             if "Failed password" in line or "Invalid user" in line:
                 ip = ip_parse(line)
