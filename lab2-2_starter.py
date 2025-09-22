@@ -51,31 +51,31 @@ def ip_parse(line):
 ## READ FILE AND FIND UNIQUE IPS
 
 def task1():
-    unique_ips - set()  # set to store uniqyue IPS
+    unique_ips = set()  # set to store uniqyue IPS
     line_count = 0
 
-    with open("sample_auth_small.log", "r") as file: # with open() safely opens and closes file
+    with open("sample_auth_small.log", "r") as file: # with open () safely opens and closes file
         for line in file:
             line_count += 1
             ip = ip_parse(line)
             if ip:
-                unique_ips.add(ip)  # add IP to set (sets automatically handle duplicates)
+                unique_ips.add(ip)  # add IP to set ( sets automatically handle duplicates)
 
 # convert to sorted list
-sorted_ips = sorted(unique_ips) # sorted() puts IPs in alphabetical order
-
-print(f"Lines read: {line_count}")
-print(f"unique IPs: {len(unique_ips)}")
-print(f"first 10 IPs: {sorted_ips[:10]}")
+    sorted_ips = sorted(unique_ips) 
+    
+    print(f"Lines read: {line_count}")
+    print(f"Unique IPs: {len(unique_ips)}")
+    print(f"First 10 IPs: {sorted_ips[:10]}")    
 
 
 
 ## COUNt FAIL LOGIN ATTEMPTS
 
-from colections import defaultdict
+from collections import defaultdict
 
 def task2():
-    counts = defaultdict(int) # creates dictionary that starts with 0 for new keys, defaultdict(int) makes new entries with value 0 
+    counts = defaultdict(int) # creates dictionary that starts with 0 for new keys, defaultdict( int) makes new entries with value 0 
 
     with open("sample_auth_snall.log", "r") as file:
         for line in file:
