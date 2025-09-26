@@ -51,7 +51,7 @@ def ip_parse(line):
 def top_n(counts, n=5):
     # Sort the IPs by their failure counts (highest to lowest)
     # Take only the first N results (top 5 by default)
-    return sorted(counts.items(), key=lambda kv: kv[1], reverse=True)[:n]
+    return sorted(counts.items(), key=lambda kv: kv[1], reverse=True)[:n]  # basically used to sort dictionary
 
 # Task 1.2: Find all unique IP addresses in the log file
 def task1():
@@ -134,17 +134,17 @@ def task3():
         # Create a CSV writer object
         writer = csv.writer(csvfile)
         # Write the header row
-        writer.writerow(["ip", "failed_count"])
+        writer.writerow(["ip", " failed count"])
         # Write each IP and its count as a new row
-        for ip, count in counts.items():
+        for ip, count in top_attackers:
             writer.writerow([ip, count])
     
     # Record the end time and calculate how long it took
     end = time.time()
-    print(f"Wrote failed_counts.txt")
-    print(f"Elapsed: {end-start:.2f} seconds")
+    print("Wrote failed_counts.txt")
+    print("Elapsed:", end-start, "seconds")
 
-# This runs when you execute the script directly
+# This make it when you execute the script directly
 if __name__ == "__main__":
     # Run Task 1: Find unique IPs
     task1()

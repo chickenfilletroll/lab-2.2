@@ -73,4 +73,31 @@ def task1():
     # Print results 
     print(f"Lines read: {line_count}")
     print(f"Unique IPs: {len(unique_ips)}")
-    print(f"First 10 IPs: {sorted_ips[:10]}")
+    for x in sorted_ips[:10]:
+        print(x)
+
+
+# Task 2: Count how many failed login attempts each IP has
+def task2():
+    # Create a dictionary that starts counting at 0 for new IPs
+    counts = defaultdict(int)
+    
+    # Open the log file for reading
+    with open("sample_auth_small.log") as f:
+        # Read the file line by line
+        for line in f:
+            # Only look at lines about failed logins
+            if "Failed password" in line or "Invalid user" in line:
+                # Try to extract an IP address from this line
+                ip = ip_parse(line)
+                # If we found an IP, increase its failure count by 1
+                if ip:
+                    counts[ip] += 1
+    
+    # Print the dictionary showing IPs and their failure counts
+    print(counts)
+
+
+if __name__ == "__main__":
+    task1()
+    task2()
