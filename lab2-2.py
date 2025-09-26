@@ -27,6 +27,7 @@ def simple_parser(line):
     # Return nothing if no "port" found in the line
     return None
 
+
 # Task 1.1: Function to find IP addresses in log lines
 def ip_parse(line):
     # Check if the line contains the word "from"
@@ -74,7 +75,7 @@ def task1():
     # Sort the IPs in alphabetical order
     sorted_ips = sorted(unique_ips)
     
-    # Print the results as required by the lab
+    # Print results 
     print(f"Lines read: {line_count}")
     print(f"Unique IPs: {len(unique_ips)}")
     print(f"First 10 IPs: {sorted_ips[:10]}")
