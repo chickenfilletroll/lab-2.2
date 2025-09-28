@@ -38,34 +38,6 @@ def parse_auth_line(line):
     return ts, ip, event_type   # returns timestamp, ip, event_type
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # This runs when you execute the script directly
 if __name__ == "__main__":
     per_ip_timestamps = defaultdict(list)
