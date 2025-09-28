@@ -78,6 +78,8 @@ for ip, times in per_ip_timestamps.items(): # for each ip and its list of timest
 for incident in incidents:
     print(incident) # show details of the incident
 
+
+
 # Count total failed attempts per IP
 failed_counts = {ip: len(times) for ip, times in per_ip_timestamps.items()}
 
@@ -85,29 +87,29 @@ failed_counts = {ip: len(times) for ip, times in per_ip_timestamps.items()}
 top_ips = sorted(failed_counts.items(), key=lambda x: x[1], reverse=True)
 
 # Save summary to output report
-with open("top_attackers_report.txt", "w") as f:
-    f.write("IP\tFailed_Attempts\n")
-    for ip, count in top_ips:
-        f.write(f"{ip}\t{count}\n")
+with open("top_attackers_report.txt", "w") as f: # open files to write report
+    f.write("IP\tFailed_Attempts\n")            # write header line
+    for ip, count in top_ips:               # for each ip and its failed count
+        f.write(f"{ip}\t{count}\n")      # write ip and count to file
 
-print("Top attacker summary saved to top_attackers_report.txt")
+print("Top attacker summary saved to top_attackers_report.txt") #notfy user report is saved
 
 # --- Optional: Plot bar chart of top 10 attacker IPs ---
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt     # import plotting library
 
 # Get top 10 IPs and their counts
-top10 = top_ips[:10]
-ips = [ip for ip, count in top10]
-counts = [count for ip, count in top10]
+top10 = top_ips[:10]        #get up to 10 IPs, but if there are fewer, it gets all available
+ips = [ip for ip, count in top10]       #lists of ips for the chart
+counts = [count for ip, count in top10] #list of counts for the chart
 
-plt.figure(figsize=(10,5))
-plt.bar(ips, counts)
-plt.title("Top 10 attacker IPs")
-plt.xlabel("IP")
-plt.ylabel("Failed attempts")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig("top_attackers.png")
-plt.show()
+plt.figure(figsize=(10,5)) # set size of chart
+plt.bar(ips, counts) # create bar chart
+plt.title("Top 10 attacker IPs") # set title and labels
+plt.xlabel("IP")    # set x-axis label
+plt.ylabel("Failed attempts") # set y-axis label
+plt.xticks(rotation=45) # rotate ip labels for readability
+plt.tight_layout() # adjust layout to fit everything
+plt.savefig("top_attackers.png") # save chart as image file
+plt.show() # display the chart
 
-print("Bar chart saved to top_attackers.png")
+print("Bar chart saved to top_attackers.png") # notify user chart is saved
